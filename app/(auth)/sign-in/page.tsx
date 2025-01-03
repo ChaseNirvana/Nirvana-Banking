@@ -1,6 +1,6 @@
 import AuthForm from '@/components/AuthForm'
 
-const SignIn = () => {
+const SignIn = (p0: { email: string; password: string }) => {
   return (
     <section className="flex-center size-full max-sm:px-6">
       <AuthForm type="sign-in" />
@@ -9,3 +9,4 @@ const SignIn = () => {
 }
 
 export default SignIn
+

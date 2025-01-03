@@ -23,14 +23,14 @@ import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { getLoggedInUser, signUp } from '@/lib/actions/user.actions';
+import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions';
 import SignIn from '@/app/(auth)/sign-in/page';
+import PlaidLink from './PlaidLink';
  
-const AuthForm = ({ type}: { type: string }) => {
+const AuthForm = ({ type }: { type: string }) => {
     const router = useRouter();
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
-
 
     const formSchema = authFormSchema(type);
 
@@ -45,7 +45,8 @@ const AuthForm = ({ type}: { type: string }) => {
  
   // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true)
+    setIsLoading(true);
+    
     try {
         // Sign up with Appwrite & create plain link token
 
@@ -102,11 +103,11 @@ const AuthForm = ({ type}: { type: string }) => {
                     </p>
                 </div>
         </header>
-        {user ? (
+        {/* {user ? ( */}
             <div className="flex flex-col gap-4">
-                {/* PlaidLink */}
+                <PlaidLink user={user} variant="primary" />
             </div>
-        ): (
+        {/* ): ( */}
             <>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -175,7 +176,7 @@ const AuthForm = ({ type}: { type: string }) => {
                 </Link>
             </footer>
             </>
-        )}
+        {/* )} */}
     </section>
   )
 }
