@@ -5,14 +5,9 @@ import { createAdminClient, createSessionClient } from "../appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "../utils";
 
-export const signIn = async ({ email, password }: signInProps) => {
+export const signIn = async () => {
     try {
-        const { account } = await createAdminClient();
-        
-
-        const response = await account.createEmailPasswordSession(email, password);
-
-        return parseStringify(response);
+    // Mutation / Database / Make fetch
     } catch (error) {
         console.error('Error', error);
     }
@@ -33,7 +28,7 @@ const { email, password, firstName, lastName } = userData;
         
         const session = await account.createEmailPasswordSession(email, password);
       
-        (await cookies()).set("appwrite-session", session.secret, {
+        cookies().set("appwrite-session", session.secret, {
           path: "/",
           httpOnly: true,
           sameSite: "strict",
@@ -53,19 +48,7 @@ export async function getLoggedInUser() {
 
       return parseStringify(user);
     } catch (error) {
-        console.error('Error fetching logged-in user:', error);
-
       return null;
     }
   }
   
-export const logoutAccount = async () => {
-    try {
-        const { account } = await createSessionClient();
-
-        await (await cookies()).delete("appwrite-session");
-        await account.deleteSession('current');
-    }   catch (error) {
-        return null;
-    }
-}
