@@ -7,6 +7,7 @@ import { extractCustomerIdFromUrl, parseStringify, encryptId } from "../utils";
 import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from "plaid";
 import { plaidClient } from '@/lib/plaid'
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
+import { revalidatePath } from "next/cache";
 
 const {
   APPWRITE_DATABASE_ID: DATABASE_ID,
@@ -156,7 +157,7 @@ export const createBankAccount = async ({
   accountId,
   accessToken,
   fundingSourceUrl,
-  sharableId,
+  shareableId,
 }: createBankAccountProps) => {
   try {
     const { database } = await createAdminClient();
@@ -170,7 +171,7 @@ export const createBankAccount = async ({
         accountId,
         accessToken,
         fundingSourceUrl,
-        sharableId,
+        shareableId,
       }
     )
     return parseStringify(bankAccount);
@@ -219,7 +220,7 @@ export const exchangePublicToken = async ({
       accountId: accountData.account_id,
       accessToken,
       fundingSourceUrl,
-      sharableId: encryptId(accountData.account_id),
+      shareableId: encryptId(accountData.account_id),
     });
     // Revalidate the path to reflect the changes
     revalidatePath("/");
