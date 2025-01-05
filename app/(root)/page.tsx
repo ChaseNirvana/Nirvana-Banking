@@ -3,21 +3,28 @@ import RecentTransactions from '@/components/RecentTransactions';
 import RightSidebar from '@/components/RightSidebar';
 import TotalBalanceBox from '@/components/TotalBalanceBox';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
-import { getAccount, getAccounts } from '@/lib/bank.actions';
+import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 
-const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
+const Home = async (props: SearchParamProps) => {
+  const searchParams = await props.searchParams;
+
+  const {
+    id,
+    page
+  } = searchParams;
+
   const currentPage = Number(page as string) || 1;
   const loggedIn = await getLoggedInUser();
   const accounts = await getAccounts({ userId: loggedIn.$id })
 
- 
+
   if(!accounts) return;
 
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
 
   const account = await getAccount({ appwriteItemId })
-  
+
   return (
     <section className="home">
       <div className="home-content">

@@ -9,10 +9,10 @@ import {
   TransferType,
 } from "plaid";
 
-import { parseStringify } from "./utils";
-import { getTransactionsByBankId } from "./actions/transaction.actions";
-import { plaidClient } from "./plaid";
-import { getBank, getBanks } from "./actions/user.actions";
+import { parseStringify } from "../utils";
+import { getTransactionsByBankId } from "./transaction.actions";
+import { plaidClient } from "../plaid";
+import { getBank, getBanks } from "./user.actions";
 
 // Get multiple bank accounts
 export const getAccounts = async ({ userId }: getAccountsProps) => {
@@ -87,7 +87,15 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
         date: transferData.$createdAt,
         paymentChannel: transferData.channel,
         category: transferData.category,
-        type: transferData.senderBankId === bank.$id ? "debit" : "credit",
+        // type: transferData.amount < 0 ? "credit" : "debit", // Determine type by amount
+        // type: transferData.senderBankId === bank.$id ? "debit" : "credit",
+        type: transferData.senderBankId === bank.$id
+      ? "debit" // It's a debit if this bank is the sender
+      : transferData.receiverBankId === bank.$id
+      ? "credit" // It's a credit if this bank is the receiver
+      : transferData.amount < 0
+      ? "debit" // Positive amounts for non-transfer transactions
+      : "credit", // Negative amounts for non-transfer transactions
       })
     );
 
