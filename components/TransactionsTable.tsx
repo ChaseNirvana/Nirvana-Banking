@@ -45,7 +45,6 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
   {transactions.map((t: Transaction) => {
     console.log("Transaction Data:", t); // Logs the transaction data for debugging
 
-
     const status = getTransactionStatus(new Date(t.date));
     const amount = formatAmount(t.amount);
 
